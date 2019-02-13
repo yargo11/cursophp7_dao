@@ -2,7 +2,7 @@
 
 	class Usuario {
 		
-		private $idiusuario;
+		private $idusuario;
 		private $deslogin;
 		private $dessenha;
 		private $dtcadastro;
@@ -56,13 +56,54 @@
 			$this->setDessenha($row['dessenha']);
 			$this->setDtcadastro(new DateTime($row['dtcadastro']));
 		}}
-		public function __toString(){
+		
+	public static function getList(){
+		
+		$sql = new SQL();
+		
+		return $sql->select("SELECT * FROM tb_users ORDER BY deslogin;");
+		
+	}
+	
+	public static function search($login){
+		
+		$sql = new SQL();
+		
+		return $sql->select("SELECT * FROM tb_users WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(
+		':SEARCH'=>"%".$login."%"));
+	}
+	
+	public function login($deslogin, $dessenha){
+		
+		$sql = new SQL();
+		
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :DESLOGIN AND dessenha = :DESSENHA", array(
+		":DESLOGIN"=>$deslogin,
+		":DESSENHA"=>$dessenha
+		));
+		
+		if (count($results) > 0) {
+			
+			$row = $results[0];
+			
+			$this->setIdusuario($row['idusuario']);
+			$this->setDeslogin($row['deslogin']);
+			$this->setDessenha($row['dessenha']);
+			$this->setDtcadastro(new DateTime($row['dtcadastro']));
+		}
+		else{
+			throw new Exception ("Login e/ou senha invalidos");
+		}
+		
+	}
+		
+	public function __toString(){
 		
 		return json_encode(array(
 			"idusuario"=>$this->getIdusuario(),
 			"deslogin"=>$this->getDeslogin(),
 			"dessenha"=>$this->getDessenha(),
-			"dtcadastro"=>$this->getDtcadastro()->format("d/m/Y H:i:s")
+			"dtcadastro"=>$this->getDtcadastro()
 		));
 	}
 		
