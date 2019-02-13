@@ -24,11 +24,19 @@
 	
 	echo $aluno;*/
 	
-	$user = new Usuario();
+	/*$user = new Usuario();
 	
 	$user->loadById(7);
 	
 	$user->update("professores","hcode");
+	
+	echo $user;*/
+	
+	$user = new Usuario();
+	
+	$user->loadById(6);
+	
+	$user->delete();
 	
 	echo $user;
 
